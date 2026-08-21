@@ -1,17 +1,12 @@
 {
-  "functions": {
-    "api/*.php": {
-      "runtime": "vercel-php@0.8.0"
-    }
-  },
-  "routes": [
+  "builds": [
     {
-      "src": "/api/enviar_telegram",
-      "dest": "/api/enviar_telegram.php"
+      "src": "api/enviar_telegram.js",
+      "use": "@vercel/node"
     },
     {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "src": "**",
+      "use": "@vercel/static"
     }
   ]
 }
