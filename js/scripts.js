@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mostrarMensaje('Enviando mensaje...', '');
 
             try {   
-                const response = await fetch('/api/enviar_telegram', {
+                const response = await fetch('/api/enviar_telegram.js', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ mensaje: mensaje })
