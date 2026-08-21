@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmacia | Salud y Bienestar</title>
+    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Encabezado y Navegación -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">FARMACIA</div>
+            <ul class="nav-links">
+                <li><a href="#inicio">INICIO</a></li>
+                <li><a href="#servicios">CATÁLOGO DE SALUD</a></li>
+                <li><a href="#geolocalizacion">UBICACIÓN</a></li>
+                <li><a href="#telegram">CONTACTO TELEGRAM</a></li>
+                <li><a href="#peliculas">PELÍCULAS</a></li>
+                <li><a href="#paypal-section">PAGAR (PAYPAL)</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero">
+        <div class="hero-content">
+            <p class="subtitle">¡Cuidamos de ti y de tu familia!</p>
+            <h1>TU SALUD Y MEDICAMENTOS A TU ALCANCE</h1>
+            <a href="#telegram" class="btn-primary">CONSULTAR DISPONIBILIDAD</a>
+        </div>
+    </section>
+
+    <!-- Catálogo de Salud (Base de Datos) -->
+    <section id="servicios" class="section">
+        <h2>Catálogo de Salud</h2>
+        <div id="catalogo-productos" class="cards-container">
+            <!-- Las tarjetas de productos cargadas desde Supabase se insertarán dinámicamente aquí -->
+        </div>
+
+        <!-- Panel del Carrito / Contador de Pedidos -->
+        <div id="panel-carrito" style="max-width: 500px; margin: 30px auto 0 auto; padding: 20px; border-radius: 8px; border: 1px solid #e0e0e0; background: #ffffff; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.1rem; font-weight: bold; color: #333; margin-bottom: 10px;">
+                <i class="fa-solid fa-cart-shopping" style="color: #fd7e14; margin-right: 8px;"></i>
+                Productos seleccionados: <span id="contador-carrito" style="color: #28a745;">0</span>
+            </div>
+
+            <!-- Tabla de productos agrupados -->
+            <div id="tabla-carrito-container" style="margin: 15px 0;"></div>
+
+            <div style="font-size: 1rem; color: #555; margin-bottom: 15px;">
+                Total estimado: <b id="total-carrito" style="color: #333;">$0.00 MXN</b>
+            </div>
+            <button id="btn-enviar-carrito" class="btn-primary" style="padding: 10px 20px; cursor: pointer; font-size: 1rem; width: 100%; background-color: #fd7e14; border: none; color: white; border-radius: 5px; font-weight: bold;" onclick="enviarTodosLosPedidos()">
+                Enviar pedido
+            </button>
+
+            <!-- Contenedor para notificaciones en pantalla -->
+            <div id="mensaje-pedido" style="display: none; margin-top: 15px; padding: 12px; border-radius: 5px; font-weight: bold; font-size: 0.95rem; text-align: center;"></div>
+        </div>
+    </section>
+
+    <!-- Geolocalización -->
+    <section id="geolocalizacion" class="section bg-light">
+        <h2>Encuentra Nuestra Sucursal</h2>
+        <p>Visítanos para recibir atención médica primaria y surtir tus recetas.</p>
+
+        <!-- CSS de Leaflet -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        
+        <!-- Contenedor del Mapa -->
+        <div id="mapa-farmacia" style="width: 100%; height: 350px; border-radius: 8px; margin-top: 20px; z-index: 1;"></div>
+
+        <!-- JS de Leaflet -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const lat = 19.7968;
+                const lng = -99.8770;
+
+                const map = L.map('mapa-farmacia').setView([lat, lng], 16);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
+
+                const redIcon = L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                });
+
+                const marker = L.marker([lat, lng], { icon: redIcon }).addTo(map);
+                
+                marker.bindTooltip("<b style='color: #d32f2f; font-size: 0.95rem;'>Farmacia</b>", {
+                    permanent: true, 
+                    direction: 'right',
+                    className: 'etiqueta-farmacia'
+                }).openTooltip();
+            });
+        </script>
+
+        <style>
+            .leaflet-tooltip.etiqueta-farmacia {
+                background: white;
+                border: 1px solid #d32f2f;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                padding: 2px 6px;
+            }
+        </style>
+    </section>
+
+    <!-- Módulo de Telegram -->
+    <section id="telegram" class="section">
+        <div class="telegram-card">
+            <div class="telegram-icon">
+                <i class="fab fa-telegram-plane"></i>
+            </div>
+            <h2>Contacto vía Telegram</h2>
+            <form id="telegramForm">
+                <textarea id="mensajeTelegram" placeholder="Escribe tu mensaje o pregunta por tu medicamento aquí..." required></textarea>
+                <button type="submit" class="btn-telegram">
+                    <i class="fab fa-telegram-plane"></i> ENVIAR MENSAJE
+                </button>
+            </form>
+            <div id="resultadoRespuesta" class="resultado-msg"></div>
+        </div>
+    </section>
+
+    <!-- Sección de Streaming (TMDb) -->
+    <section id="peliculas" class="section bg-light">
+        <h2>Cartelera de Películas</h2>
+        
+        <!-- Barra de Búsqueda -->
+        <div style="max-width: 500px; margin: 0 auto 25px auto; display: flex; gap: 10px;">
+            <input type="text" id="inputPelicula" placeholder="Buscar película por nombre..." style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;">
+            <button id="btnBuscarPelicula" class="btn-primary" style="padding: 10px 18px; cursor: pointer;">
+                <i class="fa-solid fa-magnifying-glass"></i> Buscar
+            </button>
+        </div>
+
+        <div id="contenedor-peliculas" class="cards-container">
+            <!-- Las películas se cargarán dinámicamente desde TMDb -->
+        </div>
+    </section>
+
+    <!-- Sección de Pago con PayPal -->
+    <section id="paypal-section" class="section">
+        <h2>Pagar con PayPal</h2>
+        <p style="text-align: center; margin-bottom: 20px;">Realiza el pago de tu pedido de forma rápida y segura.</p>
+
+        <div style="max-width: 450px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 8px; border: 1px solid #e0e0e0; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.1rem; font-weight: bold; color: #333; margin-bottom: 15px;">
+                Monto Total a Pagar: <span id="monto-paypal-display" style="color: #fd7e14;">$0.00 MXN</span>
+            </div>
+            
+            <!-- Contenedor donde PayPal renderizará sus botones -->
+            <div id="paypal-button-container"></div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Farmacia - Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- SDK de PayPal (Modo Sandbox/Test) -->
+    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=MXN"></script>
+    <!-- SDK de Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Tu script principal -->
+    <script src="js/scripts.js"></script>
+</body>
+</html>
