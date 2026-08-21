@@ -1,7 +1,5 @@
 {
-  "name": "farmacia_elroble",
+  "name": "farmacia",
   "version": "1.0.0",
-  "engines": {
-    "node": "20.x"
-  }
+  "type": "module"
 }
