@@ -51,21 +51,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
             mostrarMensaje('Enviando mensaje...', '');
 
-            try {
+            try {   
                 const response = await fetch('/api/enviar_telegram', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ mensaje: mensaje })
                 });
 
-                if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-
                 const data = await response.json();
-                if (data.status === 'success') {
+
+                if (response.ok && data.status === 'success') {
                     mostrarMensaje('¡Mensaje enviado con éxito!', 'exito');
                     mensajeInput.value = '';
                 } else {
-                    mostrarMensaje('Error: ' + data.message, 'error');
+                    mostrarMensaje('Error: ' + (data.message || 'No se pudo enviar el mensaje'), 'error');
                 }
             } catch (error) {
                 console.error(error);

@@ -1,5 +1,4 @@
-module.exports = async (req, res) => {
-    // Permitir solo métodos POST
+export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ status: 'error', message: 'Método no permitido' });
     }
@@ -11,9 +10,8 @@ module.exports = async (req, res) => {
             return res.status(400).json({ status: 'error', message: 'El mensaje no puede estar vacío.' });
         }
 
-        // Configuración de tu Bot de Telegram
         const TELEGRAM_TOKEN = '8248425848:AAHkTXO1sqb5fvUDssss8wipMOjlbw5D-YI'; 
-        const TELEGRAM_CHAT_ID = '1188278487';           
+        const TELEGRAM_CHAT_ID = '1188278487'; 
 
         const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
 
@@ -22,8 +20,7 @@ module.exports = async (req, res) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 chat_id: TELEGRAM_CHAT_ID,
-                text: mensaje,
-                parse_mode: 'HTML'
+                text: mensaje
             })
         });
 
@@ -32,11 +29,11 @@ module.exports = async (req, res) => {
         if (data.ok) {
             return res.status(200).json({ status: 'success', message: 'Mensaje enviado con éxito' });
         } else {
-            return res.status(500).json({ status: 'error', message: data.description || 'Error de API Telegram' });
+            return res.status(400).json({ status: 'error', message: data.description || 'Error al enviar a Telegram' });
         }
 
     } catch (error) {
-        console.error('Error en Serverless Function:', error);
+        console.error('Error Serverless:', error);
         return res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
     }
 }
