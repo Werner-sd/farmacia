@@ -10,8 +10,8 @@ export default async function handler(req, res) {
             return res.status(400).json({ status: 'error', message: 'El mensaje no puede estar vacío.' });
         }
 
-        const TELEGRAM_TOKEN = '8248425848:AAHkTXO1sqb5fvUDssss8wipMOjlbw5D-YI'; 
-        const TELEGRAM_CHAT_ID = '1188278487'; 
+        const TELEGRAM_TOKEN = '8807048425:AAHFrU80n6HOZOq_JRmvmVv-vAtVX-6fEnM'; 
+        const TELEGRAM_CHAT_ID = '5537628811'; 
 
         const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
 
